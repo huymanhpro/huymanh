@@ -18,41 +18,44 @@
             background: linear-gradient(135deg, var(--dark), #0f3460);
             color: #fff;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            box-sizing: border-box;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 600px;
             width: 100%;
             text-align: center;
-            background: rgba(22, 33, 62, 0.8);
-            padding: 30px;
+            background: rgba(22, 33, 62, 0.95);
+            padding: 20px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            box-sizing: border-box;
+            margin-top: 10px;
         }
 
         h1 {
             color: var(--primary);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
+            letter-spacing: 1px;
+            margin: 5px 0;
+            font-size: 1.8rem;
             text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
         }
 
         .status-panel {
             display: flex;
             justify-content: space-around;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 12px;
             border-radius: 10px;
-            margin-bottom: 25px;
-            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
             font-weight: bold;
         }
 
@@ -60,54 +63,58 @@
             color: var(--primary);
         }
 
+        /* KHU VỰC CHỨA HỘP - ĐÃ SỬA LỖI HIỂN THỊ */
         .grid-boxes {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 15px;
-            margin-bottom: 30px;
+            margin: 20px 0;
+            width: 100%;
         }
 
         .box {
             background: linear-gradient(145deg, #1e3054, #121b2f);
             border: 2px solid #2c426f;
             border-radius: 15px;
-            height: 110px;
+            width: 85px;  /* Cố định chiều rộng */
+            height: 85px; /* Cố định chiều cao */
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2rem;
+            font-size: 2.2rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             user-select: none;
         }
 
         .box:hover {
             transform: translateY(-5px);
             border-color: var(--primary);
-            box-shadow: 0 10px 20px rgba(255, 204, 0, 0.3);
+            box-shadow: 0 8px 20px rgba(255, 204, 0, 0.4);
         }
 
         .box.opened {
-            background: #0f172a;
-            border-color: #334155;
+            background: #0f172a !important;
+            border-color: #334155 !important;
             cursor: default;
-            transform: none;
-            box-shadow: none;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
-        /* Overlay & Modals */
+        /* Overlay & Hộp thoại thông báo */
         .overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.9);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 100;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.3s ease;
         }
 
         .overlay.active {
@@ -117,69 +124,63 @@
 
         .modal {
             background: var(--card-bg);
-            padding: 40px;
+            padding: 30px 20px;
             border-radius: 20px;
             border: 2px solid var(--primary);
             text-align: center;
-            max-width: 450px;
             width: 90%;
-            box-shadow: 0 0 30px var(--primary);
-            animation: scaleUp 0.3s ease forwards;
-        }
-
-        @keyframes scaleUp {
-            from { transform: scale(0.7); }
-            to { transform: scale(1); }
+            max-width: 400px;
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.3);
         }
 
         .btn {
             background: linear-gradient(135deg, #ffcc00, #ff9900);
             color: #000;
             border: none;
-            padding: 12px 30px;
+            padding: 12px 35px;
             font-size: 1.1rem;
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.3s ease;
+            margin-top: 15px;
+            transition: all 0.2s ease;
             box-shadow: 0 5px 15px rgba(255, 204, 0, 0.4);
         }
 
         .btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(255, 204, 0, 0.6);
         }
 
         /* Vòng quay may mắn */
         .wheel-container {
             position: relative;
-            width: 280px;
-            height: 280px;
-            margin: 0 auto 20px;
+            width: 260px;
+            height: 260px;
+            margin: 20px auto;
         }
 
         .wheel {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 8px solid #fff;
+            border: 6px solid #fff;
             position: relative;
             overflow: hidden;
             transition: transform 4s cubic-bezier(0.1, 0.8, 0.1, 1);
             box-shadow: 0 0 20px rgba(255,255,255,0.2);
+            box-sizing: border-box;
         }
 
         .pointer {
             position: absolute;
-            top: -15px;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
             border-left: 15px solid transparent;
             border-right: 15px solid transparent;
-            border-top: 30px solid var(--danger);
+            border-top: 25px solid var(--danger);
             z-index: 10;
         }
 
@@ -191,10 +192,10 @@
             transform-origin: left center;
             display: flex;
             align-items: center;
-            padding-left: 20px;
+            padding-left: 15px;
             box-sizing: border-box;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #fff;
         }
 
@@ -216,14 +217,14 @@
             transform: rotate(90deg);
             white-space: pre-line;
             text-align: center;
-            width: 120px;
+            width: 110px;
         }
 
         #wheel-result {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: bold;
-            margin-top: 15px;
-            min-height: 30px;
+            margin: 15px 0;
+            min-height: 25px;
         }
     </style>
 </head>
@@ -231,23 +232,23 @@
 
     <div class="container">
         <h1>Khám Phá Báu Vật</h1>
-        <p style="color: #aaa; margin-top: 0;">Hãy tìm các hộp quà an toàn để tiến vào màn tiếp theo!</p>
+        <p style="color: #aaa; margin: 5px 0 15px 0; font-size: 0.95rem;">Mở tất cả hộp kim cương để qua màn. Tránh Bom!</p>
         
         <div class="status-panel">
             <div>Màn chơi: <span id="current-level" class="highlight">1/6</span></div>
-            <div>Số hộp còn lại: <span id="boxes-left" class="highlight">10</span></div>
+            <div>Hộp cần tìm: <span id="boxes-left" class="highlight">9</span></div>
         </div>
 
         <div class="grid-boxes" id="grid-boxes">
-            <!-- Các hộp báu vật sẽ tự động sinh ra ở đây -->
+            <!-- Hộp sẽ luôn xuất hiện ở đây -->
         </div>
     </div>
 
-    <!-- Hộp thoại thông báo nổ bom và Vòng quay may mắn -->
+    <!-- Vòng quay may mắn -->
     <div class="overlay" id="wheel-overlay">
         <div class="modal">
-            <h2 style="color: var(--danger); margin-top: 0;">💥 BÙM!!! BẠN TRÚNG BOM RỒI!</h2>
-            <p>Hãy thử vận may với vòng quay để xem số phận của bạn!</p>
+            <h2 style="color: var(--danger); margin: 0 0 10px 0; font-size: 1.5rem;">💥 BÙM!!! TRÚNG BOM RỒI!</h2>
+            <p style="margin: 0; font-size: 0.95rem;">Hãy quay vòng quay thử vận may của bạn</p>
             
             <div class="wheel-container">
                 <div class="pointer"></div>
@@ -259,30 +260,23 @@
 
             <button class="btn" id="btn-spin" onclick="spinWheel()">QUAY NGAY</button>
             <div id="wheel-result"></div>
-            <button class="btn" id="btn-close-wheel" style="display: none; background: #fff;" onclick="closeWheelModal()">Tiếp Tục</button>
+            <button class="btn" id="btn-close-wheel" style="display: none; background: #fff;" onclick="closeWheelModal()">Chơi Lại Màn Này</button>
         </div>
     </div>
 
-    <!-- Hộp thoại Chiến Thắng Hoàn Toàn -->
+    <!-- Chiến Thắng -->
     <div class="overlay" id="win-overlay">
         <div class="modal" style="border-color: var(--success); box-shadow: 0 0 30px var(--success);">
-            <h2 style="color: var(--primary); font-size: 2rem; margin-top: 0;">🎉 CHÚC MỪNG! 🎉</h2>
-            <p style="font-size: 1.4rem; font-weight: bold;">Bạn giỏi quá!!!</p>
-            <p>Bạn đã xuất sắc vượt qua toàn bộ 6 màn chơi đầy thử thách.</p>
+            <h2 style="color: var(--primary); font-size: 2rem; margin: 0 0 10px 0;">🎉 CHÚC MỪNG! 🎉</h2>
+            <p style="font-size: 1.4rem; font-weight: bold; margin: 10px 0;">Bạn giỏi quá!!!</p>
+            <p style="margin: 0 0 20px 0;">Bạn đã xuất sắc vượt qua toàn bộ 6 màn chơi.</p>
             <button class="btn" onclick="restartGame()">Chơi Lại Từ Đầu</button>
         </div>
     </div>
 
     <script>
         // Cấu hình số hộp cho mỗi màn (Màn 1: 10 hộp -> Màn 6: 2 hộp)
-        const levelConfigs = {
-            1: 10,
-            2: 8,
-            3: 6,
-            4: 4,
-            5: 3,
-            6: 2
-        };
+        const levelConfigs = { 1: 10, 2: 8, 3: 6, 4: 4, 5: 3, 6: 2 };
 
         let currentLevel = 1;
         let totalBoxes = levelConfigs[currentLevel];
@@ -300,16 +294,16 @@
         const btnCloseWheel = document.getElementById('btn-close-wheel');
         const wheelResult = document.getElementById('wheel-result');
 
-        // Khởi tạo màn chơi mới
+        // Tạo màn chơi mới
         function initLevel() {
             totalBoxes = levelConfigs[currentLevel];
             openedCount = 0;
             txtLevel.innerText = `${currentLevel}/6`;
-            txtBoxesLeft.innerText = totalBoxes - 1; // Số hộp an toàn cần mở
+            txtBoxesLeft.innerText = totalBoxes - 1; 
             gridBoxes.innerHTML = '';
 
-            // Tạo vị trí bom ngẫu nhiên
+            // Random bom
             bombIndex = Math.floor(Math.random() * totalBoxes);
 
-            // Sinh các hộp trên giao diện
+            // Sinh các hộp đảm bảo hiển thị đúng kích thước
             for (let i = 0; i < totalBoxes; i++) {
