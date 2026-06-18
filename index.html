@@ -1,90 +1,315 @@
-import os
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò Chơi Chọn Hộp Báu Vật</title>
+    <style>
+        :root {
+            --primary: #ffcc00;
+            --dark: #1a1a2e;
+            --card-bg: #16213e;
+            --danger: #e94560;
+            --success: #4e9f3d;
+        }
 
-# Cấu trúc danh sách dữ liệu gồm 4 câu hỏi (Ẩn lời giải chi tiết)
-DANH_SACH_CAU_HOI = [
-    {
-        "loai": "he_phuong_trinh",
-        "cau_hoi": "Câu 1 (Câu a): Giải hệ phương trình sau:\n   { 3(y - 5) + 2(x - 3) = 0\n   { 7(x - 4) + 3(x + y - 1) - 14 = 0",
-        "dap_an_1": "3",
-        "dap_an_2": "5",
-        "nhan_1": "Nhập đáp án x = ",
-        "nhan_2": "Nhập đáp án y = "
-    },
-    {
-        "loai": "he_phuong_trinh",
-        "cau_hoi": "Câu 2 (Câu b): Giải hệ phương trình sau:\n   { (x + 1)(y - 1) = (x - 2)(y + 1) - 1\n   { 2(x - 2)y - x = 2xy - 3",
-        "dap_an_1": "17/11",
-        "dap_an_2": "4/11",
-        "nhan_1": "Nhập đáp án x = ",
-        "nhan_2": "Nhập đáp án y = "
-    },
-    {
-        "loai": "mot_o_nhap",
-        "cau_hoi": "Câu 3 (Bài 14): Một thửa ruộng hình chữ nhật có chiều rộng ngắn hơn chiều dài 45 m. Tính diện tích thửa ruộng, biết rằng nếu chiều dài giảm đi 2 lần và chiều rộng tăng lên 3 lần thì chu vi thửa ruộng không thay đổi.",
-        "dap_an_1": "900",
-        "nhan_1": "👉 Nhập diện tích tính được (chỉ điền số): "
-    },
-    {
-        "loai": "kich_thuoc",
-        "cau_hoi": "Câu 4 (Bài 15): Một khu đất hình chữ nhật có chu vi là 280m người ta làm đường đi xung quanh rộng 2m nên diện tích phần còn lại để trồng vườn là 4256m2. Tính kích thước ban đầu của khu vườn.",
-        "dap_an_1": "80",
-        "dap_an_2": "60",
-        "nhan_1": "👉 Nhập chiều dài ban đầu (m): ",
-        "nhan_2": "👉 Nhập chiều rộng ban đầu (m): "
-    }
-]
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--dark), #0f3460);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-def chay_chuong_trinh_trac_nghiem():
-    DIEM_MOI_CAU = 1.0  # Mỗi câu đúng được 1 điểm để tổng bài đạt thang điểm 4.0
-    tong_diem = 0.0
-    so_cau_dung = 0
-    tong_so_cau = len(DANH_SACH_CAU_HOI)
-    
-    print("="*60)
-    print(" CHÀO MỪNG BẠN ĐẾN VỚI BÀI KIỂM TRA ĐÁP ÁN TỰ ĐỘNG ")
-    print("="*60)
-    print(f"Lưu ý: Bài trắc nghiệm gồm {tong_so_cau} câu hỏi hành vi.")
-    print(f"Mỗi câu hoàn thành chính xác sẽ đạt {DIEM_MOI_CAU} điểm (Thang điểm 4.0).\n")
-    print("Đối với phân số, hãy nhập dưới dạng a/b (Ví dụ: 17/11).")
-    print("="*60)
-    
-    for index, item in enumerate(DANH_SACH_CAU_HOI):
-        print(f"\n[Câu hỏi số {index + 1}]")
-        print(item["cau_hoi"])
-        print("-" * 40)
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            background: rgba(22, 33, 62, 0.8);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+        }
+
+        .status-panel {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .highlight {
+            color: var(--primary);
+        }
+
+        .grid-boxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .box {
+            background: linear-gradient(145deg, #1e3054, #121b2f);
+            border: 2px solid #2c426f;
+            border-radius: 15px;
+            height: 110px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            user-select: none;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(255, 204, 0, 0.3);
+        }
+
+        .box.opened {
+            background: #0f172a;
+            border-color: #334155;
+            cursor: default;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Overlay & Modals */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid var(--primary);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 0 30px var(--primary);
+            animation: scaleUp 0.3s ease forwards;
+        }
+
+        @keyframes scaleUp {
+            from { transform: scale(0.7); }
+            to { transform: scale(1); }
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ffcc00, #ff9900);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 204, 0, 0.4);
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 204, 0, 0.6);
+        }
+
+        /* Vòng quay may mắn */
+        .wheel-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 20px;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #fff;
+            position: relative;
+            overflow: hidden;
+            transition: transform 4s cubic-bezier(0.1, 0.8, 0.1, 1);
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid var(--danger);
+            z-index: 10;
+        }
+
+        .segment {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            left: 50%;
+            transform-origin: left center;
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+            box-sizing: border-box;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .seg1 {
+            background: var(--danger);
+            transform: rotate(0deg);
+            height: 100%;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .seg2 {
+            background: var(--success);
+            transform: rotate(180deg);
+            height: 100%;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .seg-text {
+            transform: rotate(90deg);
+            white-space: pre-line;
+            text-align: center;
+            width: 120px;
+        }
+
+        #wheel-result {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 15px;
+            min-height: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Khám Phá Báu Vật</h1>
+        <p style="color: #aaa; margin-top: 0;">Hãy tìm các hộp quà an toàn để tiến vào màn tiếp theo!</p>
         
-        # Xử lý giao diện nhập tùy theo loại câu hỏi
-        if item["loai"] in ["he_phuong_trinh", "kich_thuoc"]:
-            user_input_1 = input(item["nhan_1"]).strip()
-            user_input_2 = input(item["nhan_2"]).strip()
-            
-            # Kiểm tra cả 2 ô nhập dữ liệu
-            if user_input_1 == item["dap_an_1"] and user_input_2 == item["dap_an_2"]:
-                print("✅ Chính xác!")
-                so_cau_dung += 1
-                tong_diem += DIEM_MOI_CAU
-            else:
-                print("❌ Chưa chính xác!")
-                
-        elif item["loai"] == "mot_o_nhap":
-            user_input_1 = input(item["nhan_1"]).strip()
-            
-            # Kiểm tra 1 ô nhập duy nhất
-            if user_input_1 == item["dap_an_1"]:
-                print("✅ Chính xác!")
-                so_cau_dung += 1
-                tong_diem += DIEM_MOI_CAU
-            else:
-                print("❌ Chưa chính xác!")
-            
-    # Hiển thị bảng tổng kết điểm số trực quan cuối bài làm
-    print("\n" + "="*60)
-    print(" KẾT QUẢ BÀI LÀM CỦA BẠN ")
-    print("="*60)
-    print(f"Số câu trả lời đúng: {so_cau_dung}/{tong_so_cau}")
-    print(f"Tổng điểm đạt được: {tong_diem} / {tong_so_cau * DIEM_MOI_CAU} điểm.")
-    print("="*60)
-    print("Chương trình kết thúc. Cảm ơn bạn đã làm bài!")
+        <div class="status-panel">
+            <div>Màn chơi: <span id="current-level" class="highlight">1/6</span></div>
+            <div>Số hộp còn lại: <span id="boxes-left" class="highlight">10</span></div>
+        </div>
 
-if __name__ == "__main__":
-    chay_chuong_trinh_trac_nghiem()
+        <div class="grid-boxes" id="grid-boxes">
+            <!-- Các hộp báu vật sẽ tự động sinh ra ở đây -->
+        </div>
+    </div>
+
+    <!-- Hộp thoại thông báo nổ bom và Vòng quay may mắn -->
+    <div class="overlay" id="wheel-overlay">
+        <div class="modal">
+            <h2 style="color: var(--danger); margin-top: 0;">💥 BÙM!!! BẠN TRÚNG BOM RỒI!</h2>
+            <p>Hãy thử vận may với vòng quay để xem số phận của bạn!</p>
+            
+            <div class="wheel-container">
+                <div class="pointer"></div>
+                <div class="wheel" id="wheel">
+                    <div class="segment seg1"><div class="seg-text">Làm theo<br>yêu cầu<br>của Mạnh</div></div>
+                    <div class="segment seg2"><div class="seg-text">Không bị gì<br>Chúc may mắn</div></div>
+                </div>
+            </div>
+
+            <button class="btn" id="btn-spin" onclick="spinWheel()">QUAY NGAY</button>
+            <div id="wheel-result"></div>
+            <button class="btn" id="btn-close-wheel" style="display: none; background: #fff;" onclick="closeWheelModal()">Tiếp Tục</button>
+        </div>
+    </div>
+
+    <!-- Hộp thoại Chiến Thắng Hoàn Toàn -->
+    <div class="overlay" id="win-overlay">
+        <div class="modal" style="border-color: var(--success); box-shadow: 0 0 30px var(--success);">
+            <h2 style="color: var(--primary); font-size: 2rem; margin-top: 0;">🎉 CHÚC MỪNG! 🎉</h2>
+            <p style="font-size: 1.4rem; font-weight: bold;">Bạn giỏi quá!!!</p>
+            <p>Bạn đã xuất sắc vượt qua toàn bộ 6 màn chơi đầy thử thách.</p>
+            <button class="btn" onclick="restartGame()">Chơi Lại Từ Đầu</button>
+        </div>
+    </div>
+
+    <script>
+        // Cấu hình số hộp cho mỗi màn (Màn 1: 10 hộp -> Màn 6: 2 hộp)
+        const levelConfigs = {
+            1: 10,
+            2: 8,
+            3: 6,
+            4: 4,
+            5: 3,
+            6: 2
+        };
+
+        let currentLevel = 1;
+        let totalBoxes = levelConfigs[currentLevel];
+        let bombIndex = -1;
+        let openedCount = 0;
+        let isWheelSpinning = false;
+
+        const gridBoxes = document.getElementById('grid-boxes');
+        const txtLevel = document.getElementById('current-level');
+        const txtBoxesLeft = document.getElementById('boxes-left');
+        const wheelOverlay = document.getElementById('wheel-overlay');
+        const winOverlay = document.getElementById('win-overlay');
+        const wheel = document.getElementById('wheel');
+        const btnSpin = document.getElementById('btn-spin');
+        const btnCloseWheel = document.getElementById('btn-close-wheel');
+        const wheelResult = document.getElementById('wheel-result');
+
+        // Khởi tạo màn chơi mới
+        function initLevel() {
+            totalBoxes = levelConfigs[currentLevel];
+            openedCount = 0;
+            txtLevel.innerText = `${currentLevel}/6`;
+            txtBoxesLeft.innerText = totalBoxes - 1; // Số hộp an toàn cần mở
+            gridBoxes.innerHTML = '';
+
+            // Tạo vị trí bom ngẫu nhiên
+            bombIndex = Math.floor(Math.random() * totalBoxes);
+
+            // Sinh các hộp trên giao diện
+            for (let i = 0; i < totalBoxes; i++) {
