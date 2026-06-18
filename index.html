@@ -1,186 +1,90 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vòng Quay May Mắn</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 500px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .wheel-container {
-            position: relative;
-            width: 300px;
-            height: 300px;
-            margin: 20px auto;
-        }
-        canvas {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 5px solid #333;
-            box-sizing: border-box;
-            transition: transform 4s cubic-bezier(0.1, 0.8, 0.1, 1);
-        }
-        .pointer {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 30px solid #ff4757;
-            z-index: 10;
-        }
-        input, button {
-            padding: 10px 15px;
-            font-size: 16px;
-            margin: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        button {
-            background-color: #2ed573;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        #message {
-            margin-top: 15px;
-            font-weight: bold;
-            color: #ff4757;
-        }
-    </style>
-</head>
-<body>
+import os
 
-<div class="container">
-    <h2>Vòng Quay May Mắn (10 - 50)</h2>
+# Cấu trúc danh sách dữ liệu gồm 4 câu hỏi (Ẩn lời giải chi tiết)
+DANH_SACH_CAU_HOI = [
+    {
+        "loai": "he_phuong_trinh",
+        "cau_hoi": "Câu 1 (Câu a): Giải hệ phương trình sau:\n   { 3(y - 5) + 2(x - 3) = 0\n   { 7(x - 4) + 3(x + y - 1) - 14 = 0",
+        "dap_an_1": "3",
+        "dap_an_2": "5",
+        "nhan_1": "Nhập đáp án x = ",
+        "nhan_2": "Nhập đáp án y = "
+    },
+    {
+        "loai": "he_phuong_trinh",
+        "cau_hoi": "Câu 2 (Câu b): Giải hệ phương trình sau:\n   { (x + 1)(y - 1) = (x - 2)(y + 1) - 1\n   { 2(x - 2)y - x = 2xy - 3",
+        "dap_an_1": "17/11",
+        "dap_an_2": "4/11",
+        "nhan_1": "Nhập đáp án x = ",
+        "nhan_2": "Nhập đáp án y = "
+    },
+    {
+        "loai": "mot_o_nhap",
+        "cau_hoi": "Câu 3 (Bài 14): Một thửa ruộng hình chữ nhật có chiều rộng ngắn hơn chiều dài 45 m. Tính diện tích thửa ruộng, biết rằng nếu chiều dài giảm đi 2 lần và chiều rộng tăng lên 3 lần thì chu vi thửa ruộng không thay đổi.",
+        "dap_an_1": "900",
+        "nhan_1": "👉 Nhập diện tích tính được (chỉ điền số): "
+    },
+    {
+        "loai": "kich_thuoc",
+        "cau_hoi": "Câu 4 (Bài 15): Một khu đất hình chữ nhật có chu vi là 280m người ta làm đường đi xung quanh rộng 2m nên diện tích phần còn lại để trồng vườn là 4256m2. Tính kích thước ban đầu của khu vườn.",
+        "dap_an_1": "80",
+        "dap_an_2": "60",
+        "nhan_1": "👉 Nhập chiều dài ban đầu (m): ",
+        "nhan_2": "👉 Nhập chiều rộng ban đầu (m): "
+    }
+]
+
+def chay_chuong_trinh_trac_nghiem():
+    DIEM_MOI_CAU = 1.0  # Mỗi câu đúng được 1 điểm để tổng bài đạt thang điểm 4.0
+    tong_diem = 0.0
+    so_cau_dung = 0
+    tong_so_cau = len(DANH_SACH_CAU_HOI)
     
-    <div id="auth-box">
-        <input type="text" id="code-input" placeholder="Nhập mã của bạn tại đây...">
-        <button id="activate-btn" onclick="checkCode()">Xác nhận mã</button>
-    </div>
-
-    <div class="wheel-container">
-        <div class="pointer"></div>
-        <canvas id="wheel" width="300" height="300"></canvas>
-    </div>
-
-    <button id="spin-btn" onclick="spinWheel()" disabled>QUAY NGAY</button>
-    <div id="message">Vui lòng nhập mã để kích hoạt vòng quay.</div>
-</div>
-
-<script>
-    // Khởi tạo danh sách số từ 10 đến 50
-    const numbers = [];
-    for (let i = 10; i <= 50; i++) {
-        numbers.push(i);
-    }
-
-    // Danh sách mã hợp lệ và trạng thái sử dụng (lưu tạm thời trên trình duyệt)
-    const validCodes = {
-        'NHM1': true,
-        'NHM2': true
-    };
-
-    let hasTurn = false; 
-    const canvas = document.getElementById('wheel');
-    const ctx = canvas.getContext('2d');
-    const size = canvas.width;
-    const center = size / 2;
-    const arcs = numbers.length;
-    const arcAngle = (2 * Math.PI) / arcs;
-
-    // Vẽ vòng quay công bằng về mặt thị giác
-    function drawWheel() {
-        numbers.forEach((num, i) => {
-            const angle = i * arcAngle;
-            ctx.beginPath();
-            ctx.fillStyle = i % 2 === 0 ? '#1e90ff' : '#ffa500';
-            ctx.moveTo(center, center);
-            ctx.arc(center, center, center - 10, angle, angle + arcAngle);
-            ctx.lineTo(center, center);
-            ctx.fill();
-
-            // Vẽ số
-            ctx.save();
-            ctx.translate(center, center);
-            ctx.rotate(angle + arcAngle / 2);
-            ctx.textAlign = 'right';
-            ctx.fillStyle = 'white';
-            ctx.font = 'bold 10px Arial';
-            ctx.fillText(num, center - 20, 4);
-            ctx.restore();
-        });
-    }
-    drawWheel();
-
-    // Kiểm tra mã người dùng nhập
-    function checkCode() {
-        const input = document.getElementById('code-input').value.trim().toUpperCase();
-        const msg = document.getElementById('message');
+    print("="*60)
+    print(" CHÀO MỪNG BẠN ĐẾN VỚI BÀI KIỂM TRA ĐÁP ÁN TỰ ĐỘNG ")
+    print("="*60)
+    print(f"Lưu ý: Bài trắc nghiệm gồm {tong_so_cau} câu hỏi hành vi.")
+    print(f"Mỗi câu hoàn thành chính xác sẽ đạt {DIEM_MOI_CAU} điểm (Thang điểm 4.0).\n")
+    print("Đối với phân số, hãy nhập dưới dạng a/b (Ví dụ: 17/11).")
+    print("="*60)
+    
+    for index, item in enumerate(DANH_SACH_CAU_HOI):
+        print(f"\n[Câu hỏi số {index + 1}]")
+        print(item["cau_hoi"])
+        print("-" * 40)
         
-        if (validCodes[input] === true) {
-            validCodes[input] = false; // Đánh dấu mã đã sử dụng
-            hasTurn = true;
-            document.getElementById('spin-btn').disabled = false;
-            document.getElementById('code-input').value = '';
-            msg.innerText = "Mã hợp lệ! Bạn có 1 lượt quay.";
-            msg.style.color = "#2ed573";
-        } else if (validCodes[input] === false) {
-            msg.innerText = "Mã này đã được sử dụng trước đó!";
-            msg.style.color = "#ff4757";
-        } else {
-            msg.innerText = "Mã không chính xác. Vui lòng thử lại.";
-            msg.style.color = "#ff4757";
-        }
-    }
+        # Xử lý giao diện nhập tùy theo loại câu hỏi
+        if item["loai"] in ["he_phuong_trinh", "kich_thuoc"]:
+            user_input_1 = input(item["nhan_1"]).strip()
+            user_input_2 = input(item["nhan_2"]).strip()
+            
+            # Kiểm tra cả 2 ô nhập dữ liệu
+            if user_input_1 == item["dap_an_1"] and user_input_2 == item["dap_an_2"]:
+                print("✅ Chính xác!")
+                so_cau_dung += 1
+                tong_diem += DIEM_MOI_CAU
+            else:
+                print("❌ Chưa chính xác!")
+                
+        elif item["loai"] == "mot_o_nhap":
+            user_input_1 = input(item["nhan_1"]).strip()
+            
+            # Kiểm tra 1 ô nhập duy nhất
+            if user_input_1 == item["dap_an_1"]:
+                print("✅ Chính xác!")
+                so_cau_dung += 1
+                tong_diem += DIEM_MOI_CAU
+            else:
+                print("❌ Chưa chính xác!")
+            
+    # Hiển thị bảng tổng kết điểm số trực quan cuối bài làm
+    print("\n" + "="*60)
+    print(" KẾT QUẢ BÀI LÀM CỦA BẠN ")
+    print("="*60)
+    print(f"Số câu trả lời đúng: {so_cau_dung}/{tong_so_cau}")
+    print(f"Tổng điểm đạt được: {tong_diem} / {tong_so_cau * DIEM_MOI_CAU} điểm.")
+    print("="*60)
+    print("Chương trình kết thúc. Cảm ơn bạn đã làm bài!")
 
-    // Cài đặt logic quay luôn trúng số 45
-    function spinWheel() {
-        if (!hasTurn) return;
-        hasTurn = false; // Khóa lượt ngay lập tức
-        document.getElementById('spin-btn').disabled = true;
-
-        const targetNumber = 45;
-        const targetIndex = numbers.indexOf(targetNumber);
-
-        // Tính toán góc quay để mũi tên (ở đỉnh 12 giờ) chỉ đúng số 45
-        // Công thức tính toán vị trí dừng chính xác trên Canvas
-        const targetAngle = (targetIndex * arcAngle) + (arcAngle / 2);
-        const desiredStopAngle = (3 * Math.PI / 2) - targetAngle;
-        
-        // Quay thêm 5 vòng (360 độ * 5) để tạo hiệu ứng mượt mà
-        const totalRotation = (desiredStopAngle) + (10 * Math.PI); 
-
-        canvas.style.transform = `rotate(${totalRotation}rad)`;
-
-        setTimeout(() => {
-            document.getElementById('message').innerText = `Chúc mừng! Bạn đã trúng số ${targetNumber}!`;
-            document.getElementById('message').style.color = "#2ed573";
-        }, 4000); // Trùng với thời gian transition 4s trong CSS
-    }
-</script>
-
-</body>
-</html>
+if __name__ == "__main__":
+    chay_chuong_trinh_trac_nghiem()
