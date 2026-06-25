@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Dò Mìn 3x3</title>
+    <title>Game Dò Mìn 3x3 Chuyên Nghiệp</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -36,7 +36,7 @@
             text-align: center;
         }
 
-        h1 { margin-top: 0; color: var(--primary); }
+        h1 { margin-top: 0; color: var(--primary); font-size: 1.8rem;}
 
         .tabs {
             display: flex;
@@ -49,10 +49,12 @@
             background: transparent;
             border: 2px solid var(--primary);
             color: var(--text-color);
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
             transition: 0.3s;
+            font-weight: bold;
+            flex: 1;
         }
 
         .tab-btn.active, .tab-btn:hover {
@@ -65,51 +67,60 @@
         .board {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 12px;
             margin: 1.5rem 0;
         }
 
         .cell {
             background-color: #334155;
             aspect-ratio: 1;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: bold;
-            transition: 0.2s;
+            transition: all 0.2s ease;
             border: 2px solid transparent;
         }
 
-        .cell:hover:not(.revealed) { background-color: #475569; }
+        .cell:hover:not(.revealed) { 
+            background-color: #475569; 
+            transform: scale(1.05);
+        }
         .cell.revealed { background-color: #64748b; cursor: not-allowed; }
-        .cell.mine { background-color: var(--danger) !important; }
-        .cell.safe { background-color: var(--accent) !important; }
+        .cell.mine { background-color: var(--danger) !important; box-shadow: 0 0 15px var(--danger); }
+        .cell.safe { background-color: var(--accent) !important; box-shadow: 0 0 15px var(--accent); }
 
         input {
-            width: 80%;
-            padding: 10px;
+            width: 90%;
+            padding: 12px;
             border-radius: 8px;
-            border: 1px solid #475569;
+            border: 2px solid #475569;
             background: #0f172a;
             color: white;
             text-align: center;
             font-size: 1rem;
             margin: 10px 0;
+            outline: none;
+        }
+        input:focus {
+            border-color: var(--primary);
         }
 
         .btn {
             background-color: var(--accent);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
+            font-weight: bold;
             transition: 0.2s;
             width: 100%;
+            margin-top: 10px;
         }
         
         .btn:hover { background-color: #059669; }
@@ -117,8 +128,18 @@
         .btn.danger:hover { background-color: #dc2626; }
 
         .hidden { display: none; }
-        .info { font-size: 1.1rem; margin: 1rem 0; }
-        .timer { color: var(--warning); font-weight: bold; font-size: 1.2rem; }
+        .info { font-size: 1.1rem; margin: 1rem 0; line-height: 1.5; }
+        .timer { color: var(--warning); font-weight: bold; font-size: 1.4rem; }
+        
+        .code-box {
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px dashed var(--primary);
+            word-break: break-all;
+            user-select: all;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -127,13 +148,13 @@
     <h1>💣 Dò Mìn Thử Thách</h1>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('create')">Đặt Mìn</button>
-        <button class="tab-btn" onclick="switchTab('play')">Nhập Mã</button>
+        <button class="tab-btn active" id="tab-create" onclick="switchTab('create')">Đặt Mìn</button>
+        <button class="tab-btn" id="tab-play" onclick="switchTab('play')">Nhập Mã</button>
     </div>
 
     <!-- TẠO MÌN -->
     <div id="create-panel" class="panel active">
-        <p>Nhấn vào 1 ô bên dưới để <strong>Đặt Mìn</strong></p>
+        <p>Nhấp vào 1 ô bên dưới để <strong>Đặt Mìn</strong></p>
         <div class="board" id="create-board"></div>
         <button class="btn hidden" id="save-btn" onclick="generateCode()">Lưu & Tạo Mã</button>
         <div class="info" id="create-code-display"></div>
@@ -141,7 +162,7 @@
 
     <!-- CHƠI GAME -->
     <div id="play-panel" class="panel">
-        <input type="text" id="join-code" placeholder="Nhập mã chia sẻ...">
+        <input type="text" id="join-code" placeholder="Dán mã chia sẻ vào đây...">
         <button class="btn" onclick="loadGame()">Tham gia chơi</button>
         
         <div id="game-ui" class="hidden">
@@ -153,50 +174,55 @@
 </div>
 
 <script>
-    let currentMode = 'create';
-    let boardState = [0,0,0, 0,0,0, 0,0,0]; // 0: rỗng, 1: có mìn
-    let playBoardState = [-1,-1,-1, -1,-1,-1, -1,-1,-1]; // -1: chưa lật, 0: an toàn
+    let boardState =; 
+    let playBoardState = [-1, -1, -1, -1, -1, -1, -1, -1, -1]; 
     let mineIndex = -1;
     let gameTimer;
     let timeLeft = 60;
     let gameActive = false;
-    let usedCodes = new Set(); // Chống chơi lại mã cũ
+    let usedCodes = new Set(); 
 
     function switchTab(tabId) {
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
-        event.target.classList.add('active');
-        document.getElementById(`${tabId}-panel`).classList.add('active');
-        resetCreateBoard();
+        
+        if(tabId === 'create') {
+            document.getElementById('tab-create').classList.add('active');
+            document.getElementById('create-panel').classList.add('active');
+            resetCreateBoard();
+        } else {
+            document.getElementById('tab-play').classList.add('active');
+            document.getElementById('play-panel').classList.add('active');
+            document.getElementById('game-ui').classList.add('hidden');
+            document.getElementById('join-code').value = '';
+        }
     }
 
     function resetCreateBoard() {
-        boardState = [0,0,0, 0,0,0, 0,0,0];
+        boardState =;
         mineIndex = -1;
         document.getElementById('save-btn').classList.add('hidden');
         document.getElementById('create-code-display').innerHTML = '';
-        renderBoard('create-board', [0,0,0, 0,0,0, 0,0,0], true);
+        renderCreateBoard();
     }
 
-    function renderBoard(boardId, stateArray, isCreator) {
-        const board = document.getElementById(boardId);
+    function renderCreateBoard() {
+        const board = document.getElementById('create-board');
         board.innerHTML = '';
-        stateArray.forEach((val, idx) => {
+        boardState.forEach((val, idx) => {
             const cell = document.createElement('div');
             cell.classList.add('cell');
-            if (val === 1) cell.classList.add('mine');
-            if (val === 0 && !isCreator) cell.classList.add('safe');
+            if (val === 1) {
+                cell.classList.add('mine');
+                cell.innerText = '💣';
+            }
             
             cell.onclick = () => {
-                if (isCreator) {
-                    boardState = [0,0,0, 0,0,0, 0,0,0];
-                    boardState[idx] = 1;
-                    mineIndex = idx;
-                    renderBoard('create-board', boardState, true);
-                    document.getElementById('save-btn').classList.remove('hidden');
-                } else {
-                    handlePlayClick(idx);
-                }
+                boardState =; // Reset các ô khác
+                boardState[idx] = 1;
+                mineIndex = idx;
+                renderCreateBoard();
+                document.getElementById('save-btn').classList.remove('hidden');
             };
             board.appendChild(cell);
         });
@@ -204,11 +230,10 @@
 
     // TẠO MÃ
     function generateCode() {
-        if (mineIndex === -1) return alert("Vui lòng đặt mìn trước!");
-        // Mã hóa đơn giản: vị trí mìn + timestamp
+        if (mineIndex === -1) return alert("Vui lòng chọn 1 ô để đặt mìn!");
         const secretCode = btoa(`${mineIndex}|${Date.now()}`);
         document.getElementById('create-code-display').innerHTML = 
-            `Mã của bạn: <br><strong style="color:var(--primary); font-size:1.5rem">${secretCode}</strong>`;
+            `Sao chép mã này gửi cho bạn bè:<br><div class="code-box">${secretCode}</div>`;
     }
 
     // THAM GIA CHƠI
@@ -217,30 +242,24 @@
         if (!code) return alert("Vui lòng nhập mã!");
         
         if (usedCodes.has(code)) {
-            return alert("Mã này đã được sử dụng trước đó. Bạn không được chơi lại mã cũ!");
+            return alert("Lỗi: Bạn đã chơi mã này rồi! Quy định không được chơi lại lần 2.");
         }
 
         try {
             const decoded = atob(code);
             const parts = decoded.split('|');
             mineIndex = parseInt(parts[0]);
-            const timestamp = parseInt(parts[1]);
-
-            // Mã hết hạn sau 10 phút kể từ lúc tạo (đề phòng mã cũ tạo ra từ lâu)
-            if (Date.now() - timestamp > 600000) {
-                return alert("Mã đã hết hạn sử dụng!");
-            }
-
-            usedCodes.add(code); // Lưu mã để không cho dùng lại
+            
+            usedCodes.add(code); 
             startGame();
         } catch (e) {
-            alert("Mã không hợp lệ!");
+            alert("Mã trò chơi không hợp lệ hoặc đã bị chỉnh sửa!");
         }
     }
 
     function startGame() {
         document.getElementById('game-ui').classList.remove('hidden');
-        playBoardState = [-1,-1,-1, -1,-1,-1, -1,-1,-1];
+        playBoardState = [-1, -1, -1, -1, -1, -1, -1, -1, -1];
         gameActive = true;
         timeLeft = 60;
         document.getElementById('play-msg').innerHTML = '';
@@ -255,7 +274,7 @@
             document.getElementById('timer').innerText = `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
             
             if (timeLeft <= 0) {
-                endGame(false, "Hết giờ! Bạn không chọn đủ 8 ô.");
+                endGame(false, "⏱️ Hết giờ! Bạn đã thất bại vì không chọn đủ 8 ô trong 1 phút.");
             }
         }, 1000);
     }
@@ -266,7 +285,14 @@
         playBoardState.forEach((val, idx) => {
             const cell = document.createElement('div');
             cell.classList.add('cell');
-            if (val === 0) cell.classList.add('safe');
+            
+            if (val === 0) {
+                cell.classList.add('safe');
+                cell.innerText = '💎';
+            } else if (val === 1) {
+                cell.classList.add('mine');
+                cell.innerText = '💣';
+            }
             
             cell.onclick = () => handlePlayClick(idx);
             board.appendChild(cell);
@@ -275,28 +301,3 @@
 
     function handlePlayClick(idx) {
         if (!gameActive) return;
-        if (playBoardState[idx] !== -1) return; // Đã chọn ô này
-
-        if (idx === mineIndex) {
-            // Trúng mìn
-            playBoardState[idx] = 1; // Đánh dấu mìn
-            endGame(false, "💣 Đã trúng Mìn! Bạn thua rồi.");
-        } else {
-            // An toàn
-            playBoardState[idx] = 0;
-            renderPlayBoard();
-            checkWin();
-        }
-    }
-
-    function checkWin() {
-        // Đếm xem đã chọn được 8 ô an toàn chưa
-        const safeCount = playBoardState.filter(val => val === 0).length;
-        if (safeCount >= 8) {
-            endGame(true, "🎉 Chúc mừng! Bạn đã chọn đủ 8 ô an toàn!");
-        }
-    }
-
-    function endGame(isWin, message) {
-        gameActive = false;
-        clearInterval(gameTimer);
