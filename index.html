@@ -3,307 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trò Chơi Chọn Hộp Báu Vật</title>
+    <title>Game Dò Mìn 3x3</title>
     <style>
         :root {
-            --primary: #ffcc00;
-            --dark: #1a1a2e;
-            --card-bg: #16213e;
-            --danger: #e94560;
-            --success: #4e9f3d;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f1f5f9;
+            --primary: #3b82f6;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--dark), #0f3460);
-            color: #fff;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
-            padding: 10px;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             min-height: 100vh;
-            box-sizing: border-box;
         }
 
         .container {
-            max-width: 600px;
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             width: 100%;
-            text-align: center;
-            background: rgba(22, 33, 62, 0.95);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-sizing: border-box;
-            margin-top: 10px;
-        }
-
-        h1 {
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 5px 0;
-            font-size: 1.8rem;
-            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
-        }
-
-        .status-panel {
-            display: flex;
-            justify-content: space-around;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-            font-weight: bold;
-        }
-
-        .highlight {
-            color: var(--primary);
-        }
-
-        /* KHU VỰC CHỨA HỘP - ĐÃ SỬA LỖI HIỂN THỊ */
-        .grid-boxes {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-            width: 100%;
-        }
-
-        .box {
-            background: linear-gradient(145deg, #1e3054, #121b2f);
-            border: 2px solid #2c426f;
-            border-radius: 15px;
-            width: 85px;  /* Cố định chiều rộng */
-            height: 85px; /* Cố định chiều cao */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2.2rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            user-select: none;
-        }
-
-        .box:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 8px 20px rgba(255, 204, 0, 0.4);
-        }
-
-        .box.opened {
-            background: #0f172a !important;
-            border-color: #334155 !important;
-            cursor: default;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-
-        /* Overlay & Hộp thoại thông báo */
-        .overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal {
-            background: var(--card-bg);
-            padding: 30px 20px;
-            border-radius: 20px;
-            border: 2px solid var(--primary);
-            text-align: center;
-            width: 90%;
             max-width: 400px;
-            box-shadow: 0 0 30px rgba(255, 204, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 { margin-top: 0; color: var(--primary); }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--primary);
+        }
+
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .cell {
+            background-color: #334155;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .cell:hover:not(.revealed) { background-color: #475569; }
+        .cell.revealed { background-color: #64748b; cursor: not-allowed; }
+        .cell.mine { background-color: var(--danger) !important; }
+        .cell.safe { background-color: var(--accent) !important; }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            font-size: 1rem;
+            margin: 10px 0;
         }
 
         .btn {
-            background: linear-gradient(135deg, #ffcc00, #ff9900);
-            color: #000;
+            background-color: var(--accent);
+            color: white;
             border: none;
-            padding: 12px 35px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 50px;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.2s ease;
-            box-shadow: 0 5px 15px rgba(255, 204, 0, 0.4);
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
-        }
-
-        /* Vòng quay may mắn */
-        .wheel-container {
-            position: relative;
-            width: 260px;
-            height: 260px;
-            margin: 20px auto;
-        }
-
-        .wheel {
+            font-size: 1rem;
+            transition: 0.2s;
             width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 6px solid #fff;
-            position: relative;
-            overflow: hidden;
-            transition: transform 4s cubic-bezier(0.1, 0.8, 0.1, 1);
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
-            box-sizing: border-box;
         }
+        
+        .btn:hover { background-color: #059669; }
+        .btn.danger { background-color: var(--danger); }
+        .btn.danger:hover { background-color: #dc2626; }
 
-        .pointer {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 25px solid var(--danger);
-            z-index: 10;
-        }
-
-        .segment {
-            position: absolute;
-            width: 50%;
-            height: 100%;
-            left: 50%;
-            transform-origin: left center;
-            display: flex;
-            align-items: center;
-            padding-left: 15px;
-            box-sizing: border-box;
-            font-weight: bold;
-            font-size: 0.85rem;
-            color: #fff;
-        }
-
-        .seg1 {
-            background: var(--danger);
-            transform: rotate(0deg);
-            height: 100%;
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-        }
-
-        .seg2 {
-            background: var(--success);
-            transform: rotate(180deg);
-            height: 100%;
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-        }
-
-        .seg-text {
-            transform: rotate(90deg);
-            white-space: pre-line;
-            text-align: center;
-            width: 110px;
-        }
-
-        #wheel-result {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin: 15px 0;
-            min-height: 25px;
-        }
+        .hidden { display: none; }
+        .info { font-size: 1.1rem; margin: 1rem 0; }
+        .timer { color: var(--warning); font-weight: bold; font-size: 1.2rem; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Khám Phá Báu Vật</h1>
-        <p style="color: #aaa; margin: 5px 0 15px 0; font-size: 0.95rem;">Mở tất cả hộp kim cương để qua màn. Tránh Bom!</p>
+<div class="container">
+    <h1>💣 Dò Mìn Thử Thách</h1>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('create')">Đặt Mìn</button>
+        <button class="tab-btn" onclick="switchTab('play')">Nhập Mã</button>
+    </div>
+
+    <!-- TẠO MÌN -->
+    <div id="create-panel" class="panel active">
+        <p>Nhấn vào 1 ô bên dưới để <strong>Đặt Mìn</strong></p>
+        <div class="board" id="create-board"></div>
+        <button class="btn hidden" id="save-btn" onclick="generateCode()">Lưu & Tạo Mã</button>
+        <div class="info" id="create-code-display"></div>
+    </div>
+
+    <!-- CHƠI GAME -->
+    <div id="play-panel" class="panel">
+        <input type="text" id="join-code" placeholder="Nhập mã chia sẻ...">
+        <button class="btn" onclick="loadGame()">Tham gia chơi</button>
         
-        <div class="status-panel">
-            <div>Màn chơi: <span id="current-level" class="highlight">1/6</span></div>
-            <div>Hộp cần tìm: <span id="boxes-left" class="highlight">9</span></div>
-        </div>
-
-        <div class="grid-boxes" id="grid-boxes">
-            <!-- Hộp sẽ luôn xuất hiện ở đây -->
+        <div id="game-ui" class="hidden">
+            <div class="info">Thời gian còn lại: <span class="timer" id="timer">01:00</span></div>
+            <div class="board" id="play-board"></div>
+            <div class="info" id="play-msg"></div>
         </div>
     </div>
+</div>
 
-    <!-- Vòng quay may mắn -->
-    <div class="overlay" id="wheel-overlay">
-        <div class="modal">
-            <h2 style="color: var(--danger); margin: 0 0 10px 0; font-size: 1.5rem;">💥 BÙM!!! TRÚNG BOM RỒI!</h2>
-            <p style="margin: 0; font-size: 0.95rem;">Hãy quay vòng quay thử vận may của bạn</p>
+<script>
+    let currentMode = 'create';
+    let boardState = [0,0,0, 0,0,0, 0,0,0]; // 0: rỗng, 1: có mìn
+    let playBoardState = [-1,-1,-1, -1,-1,-1, -1,-1,-1]; // -1: chưa lật, 0: an toàn
+    let mineIndex = -1;
+    let gameTimer;
+    let timeLeft = 60;
+    let gameActive = false;
+    let usedCodes = new Set(); // Chống chơi lại mã cũ
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById(`${tabId}-panel`).classList.add('active');
+        resetCreateBoard();
+    }
+
+    function resetCreateBoard() {
+        boardState = [0,0,0, 0,0,0, 0,0,0];
+        mineIndex = -1;
+        document.getElementById('save-btn').classList.add('hidden');
+        document.getElementById('create-code-display').innerHTML = '';
+        renderBoard('create-board', [0,0,0, 0,0,0, 0,0,0], true);
+    }
+
+    function renderBoard(boardId, stateArray, isCreator) {
+        const board = document.getElementById(boardId);
+        board.innerHTML = '';
+        stateArray.forEach((val, idx) => {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            if (val === 1) cell.classList.add('mine');
+            if (val === 0 && !isCreator) cell.classList.add('safe');
             
-            <div class="wheel-container">
-                <div class="pointer"></div>
-                <div class="wheel" id="wheel">
-                    <div class="segment seg1"><div class="seg-text">Làm theo<br>yêu cầu<br>của Mạnh</div></div>
-                    <div class="segment seg2"><div class="seg-text">Không bị gì<br>Chúc may mắn</div></div>
-                </div>
-            </div>
+            cell.onclick = () => {
+                if (isCreator) {
+                    boardState = [0,0,0, 0,0,0, 0,0,0];
+                    boardState[idx] = 1;
+                    mineIndex = idx;
+                    renderBoard('create-board', boardState, true);
+                    document.getElementById('save-btn').classList.remove('hidden');
+                } else {
+                    handlePlayClick(idx);
+                }
+            };
+            board.appendChild(cell);
+        });
+    }
 
-            <button class="btn" id="btn-spin" onclick="spinWheel()">QUAY NGAY</button>
-            <div id="wheel-result"></div>
-            <button class="btn" id="btn-close-wheel" style="display: none; background: #fff;" onclick="closeWheelModal()">Chơi Lại Màn Này</button>
-        </div>
-    </div>
+    // TẠO MÃ
+    function generateCode() {
+        if (mineIndex === -1) return alert("Vui lòng đặt mìn trước!");
+        // Mã hóa đơn giản: vị trí mìn + timestamp
+        const secretCode = btoa(`${mineIndex}|${Date.now()}`);
+        document.getElementById('create-code-display').innerHTML = 
+            `Mã của bạn: <br><strong style="color:var(--primary); font-size:1.5rem">${secretCode}</strong>`;
+    }
 
-    <!-- Chiến Thắng -->
-    <div class="overlay" id="win-overlay">
-        <div class="modal" style="border-color: var(--success); box-shadow: 0 0 30px var(--success);">
-            <h2 style="color: var(--primary); font-size: 2rem; margin: 0 0 10px 0;">🎉 CHÚC MỪNG! 🎉</h2>
-            <p style="font-size: 1.4rem; font-weight: bold; margin: 10px 0;">Bạn giỏi quá!!!</p>
-            <p style="margin: 0 0 20px 0;">Bạn đã xuất sắc vượt qua toàn bộ 6 màn chơi.</p>
-            <button class="btn" onclick="restartGame()">Chơi Lại Từ Đầu</button>
-        </div>
-    </div>
+    // THAM GIA CHƠI
+    function loadGame() {
+        const code = document.getElementById('join-code').value.trim();
+        if (!code) return alert("Vui lòng nhập mã!");
+        
+        if (usedCodes.has(code)) {
+            return alert("Mã này đã được sử dụng trước đó. Bạn không được chơi lại mã cũ!");
+        }
 
-    <script>
-        // Cấu hình số hộp cho mỗi màn (Màn 1: 10 hộp -> Màn 6: 2 hộp)
-        const levelConfigs = { 1: 10, 2: 8, 3: 6, 4: 4, 5: 3, 6: 2 };
+        try {
+            const decoded = atob(code);
+            const parts = decoded.split('|');
+            mineIndex = parseInt(parts[0]);
+            const timestamp = parseInt(parts[1]);
 
-        let currentLevel = 1;
-        let totalBoxes = levelConfigs[currentLevel];
-        let bombIndex = -1;
-        let openedCount = 0;
-        let isWheelSpinning = false;
+            // Mã hết hạn sau 10 phút kể từ lúc tạo (đề phòng mã cũ tạo ra từ lâu)
+            if (Date.now() - timestamp > 600000) {
+                return alert("Mã đã hết hạn sử dụng!");
+            }
 
-        const gridBoxes = document.getElementById('grid-boxes');
-        const txtLevel = document.getElementById('current-level');
-        const txtBoxesLeft = document.getElementById('boxes-left');
-        const wheelOverlay = document.getElementById('wheel-overlay');
-        const winOverlay = document.getElementById('win-overlay');
-        const wheel = document.getElementById('wheel');
-        const btnSpin = document.getElementById('btn-spin');
-        const btnCloseWheel = document.getElementById('btn-close-wheel');
-        const wheelResult = document.getElementById('wheel-result');
+            usedCodes.add(code); // Lưu mã để không cho dùng lại
+            startGame();
+        } catch (e) {
+            alert("Mã không hợp lệ!");
+        }
+    }
 
-        // Tạo màn chơi mới
-        function initLevel() {
-            totalBoxes = levelConfigs[currentLevel];
-            openedCount = 0;
-            txtLevel.innerText = `${currentLevel}/6`;
-            txtBoxesLeft.innerText = totalBoxes - 1; 
-            gridBoxes.innerHTML = '';
+    function startGame() {
+        document.getElementById('game-ui').classList.remove('hidden');
+        playBoardState = [-1,-1,-1, -1,-1,-1, -1,-1,-1];
+        gameActive = true;
+        timeLeft = 60;
+        document.getElementById('play-msg').innerHTML = '';
+        renderPlayBoard();
+        clearInterval(gameTimer);
+        
+        document.getElementById('timer').innerText = "01:00";
+        gameTimer = setInterval(() => {
+            timeLeft--;
+            let min = Math.floor(timeLeft / 60);
+            let sec = timeLeft % 60;
+            document.getElementById('timer').innerText = `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+            
+            if (timeLeft <= 0) {
+                endGame(false, "Hết giờ! Bạn không chọn đủ 8 ô.");
+            }
+        }, 1000);
+    }
 
-            // Random bom
-            bombIndex = Math.floor(Math.random() * totalBoxes);
+    function renderPlayBoard() {
+        const board = document.getElementById('play-board');
+        board.innerHTML = '';
+        playBoardState.forEach((val, idx) => {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            if (val === 0) cell.classList.add('safe');
+            
+            cell.onclick = () => handlePlayClick(idx);
+            board.appendChild(cell);
+        });
+    }
 
-            // Sinh các hộp đảm bảo hiển thị đúng kích thước
-            for (let i = 0; i < totalBoxes; i++) {
+    function handlePlayClick(idx) {
+        if (!gameActive) return;
+        if (playBoardState[idx] !== -1) return; // Đã chọn ô này
+
+        if (idx === mineIndex) {
+            // Trúng mìn
+            playBoardState[idx] = 1; // Đánh dấu mìn
+            endGame(false, "💣 Đã trúng Mìn! Bạn thua rồi.");
+        } else {
+            // An toàn
+            playBoardState[idx] = 0;
+            renderPlayBoard();
+            checkWin();
+        }
+    }
+
+    function checkWin() {
+        // Đếm xem đã chọn được 8 ô an toàn chưa
+        const safeCount = playBoardState.filter(val => val === 0).length;
+        if (safeCount >= 8) {
+            endGame(true, "🎉 Chúc mừng! Bạn đã chọn đủ 8 ô an toàn!");
+        }
+    }
+
+    function endGame(isWin, message) {
+        gameActive = false;
+        clearInterval(gameTimer);
