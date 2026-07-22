@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quy Đổi Bài Baccarat Sang Điểm Xúc Xắc</title>
+    <title>Quy Đổi Baccarat Sang Điểm Xúc Xắc</title>
     <style>
         * {
             box-sizing: border-box;
@@ -46,10 +46,6 @@
             padding: 25px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.3);
             text-align: center;
-            transition: transform 0.2s;
-        }
-        .side:hover {
-            transform: translateY(-5px);
         }
         .left-side {
             background: linear-gradient(135deg, #1e3c72, #2a5298);
@@ -92,10 +88,6 @@
             background-color: white;
             color: #333;
             cursor: pointer;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-        }
-        select:focus {
-            outline: 3px solid #f39c12;
         }
         .result-box {
             background-color: rgba(0, 0, 0, 0.4);
@@ -120,7 +112,6 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             color: #fff;
-            margin-top: 5px;
         }
         @media (max-width: 768px) {
             .container {
@@ -132,7 +123,7 @@
 <body>
 
     <h1>🃏 QUY ĐỔI BACCARAT ➔ XÚC XẮC 🎲</h1>
-    <div class="sub-title">Nhập các lá bài của mỗi bên để tự động dịch sang tổng điểm xúc xắc</div>
+    <div class="sub-title">Nhập bài baccarat để xem tổng điểm quy đổi xúc xắc tương ứng</div>
 
     <div class="container">
         <!-- BÊN TRÁI MÀU XANH -->
@@ -141,7 +132,7 @@
             <div class="card-inputs">
                 <div class="card-box">
                     <label>Lá 1</label>
-                    <select class="left-card" onchange="calculateResults()">
+                    <select id="left1" onchange="calculateResults()">
                         <option value="A">A</option><option value="2">2</option><option value="3">3</option>
                         <option value="4">4</option><option value="5">5</option><option value="6">6</option>
                         <option value="7">7</option><option value="8">8</option><option value="9">9</option>
@@ -150,7 +141,7 @@
                 </div>
                 <div class="card-box">
                     <label>Lá 2</label>
-                    <select class="left-card" onchange="calculateResults()">
+                    <select id="left2" onchange="calculateResults()">
                         <option value="A">A</option><option value="2">2</option><option value="3">3</option>
                         <option value="4">4</option><option value="5">5</option><option value="6">6</option>
                         <option value="7">7</option><option value="8">8</option><option value="9">9</option>
@@ -159,7 +150,7 @@
                 </div>
                 <div class="card-box">
                     <label>Lá 3</label>
-                    <select class="left-card" onchange="calculateResults()">
+                    <select id="left3" onchange="calculateResults()">
                         <option value="NONE">Không rút</option>
                         <option value="A">A</option><option value="2">2</option><option value="3">3</option>
                         <option value="4">4</option><option value="5">5</option><option value="6">6</option>
@@ -181,7 +172,7 @@
             <div class="card-inputs">
                 <div class="card-box">
                     <label>Lá 1</label>
-                    <select class="right-card" onchange="calculateResults()">
+                    <select id="right1" onchange="calculateResults()">
                         <option value="A">A</option><option value="2">2</option><option value="3">3</option>
                         <option value="4">4</option><option value="5">5</option><option value="6">6</option>
                         <option value="7">7</option><option value="8">8</option><option value="9">9</option>
@@ -190,7 +181,7 @@
                 </div>
                 <div class="card-box">
                     <label>Lá 2</label>
-                    <select class="right-card" onchange="calculateResults()">
+                    <select id="right2" onchange="calculateResults()">
                         <option value="A">A</option><option value="2">2</option><option value="3">3</option>
                         <option value="4">4</option><option value="5">5</option><option value="6">6</option>
                         <option value="7">7</option><option value="8">8</option><option value="9">9</option>
@@ -199,7 +190,7 @@
                 </div>
                 <div class="card-box">
                     <label>Lá 3</label>
-                    <select class="right-card" onchange="calculateResults()">
+                    <select id="right3" onchange="calculateResults()">
                         <option value="NONE">Không rút</option>
                         <option value="A">A</option><option value="2">2</option><option value="3">3</option>
                         <option value="4">4</option><option value="5">5</option><option value="6">6</option>
@@ -217,31 +208,35 @@
     </div>
 
     <script>
-        // Hàm chuyển đổi từ ký hiệu lá bài sang điểm xúc xắc theo đúng ảnh cung cấp
-        function convertCardToDiceValue(card) {
-            if (card === "NONE") return 0; // Trường hợp bên nào chỉ chơi 2 lá không rút lá thứ 3
-            
-            if (card === "10" || card === "J" || card === "Q" || card === "K" || card === "A") {
-                return 1;
-            } else if (card === "2" || card === "3") {
-                return 2;
-            } else if (card === "4" || card === "5") {
-                return 3;
-            } else if (card === "6" || card === "7") {
-                return 4;
-            } else if (card === "8") {
-                return 5;
-            } else if (card === "9") {
-                return 6;
-            }
+        // Hàm chuyển đổi từ lá bài sang điểm xúc xắc theo ảnh chụp màn hình
+        function cardToDice(card) {
+            if (card === "NONE") return 0;
+            if (card === "10" || card === "J" || card === "Q" || card === "K" || card === "A") return 1;
+            if (card === "2" || card === "3") return 2;
+            if (card === "4" || card === "5") return 3;
+            if (card === "6" || card === "7") return 4;
+            if (card === "8") return 5;
+            if (card === "9") return 6;
             return 0;
         }
 
         function calculateResults() {
-            // Xử lý bên trái (Player)
-            const leftSelects = document.querySelectorAll('.left-card');
-            let leftDiceValues = [];
-            let leftSum = 0;
-            
-            leftSelects.forEach(select => {
-                let diceVal = convertCardToDiceValue(select.value);
+            // Lấy giá trị của từng ô bên Trái (Player)
+            let l1 = document.getElementById("left1").value;
+            let l2 = document.getElementById("left2").value;
+            let l3 = document.getElementById("left3").value;
+
+            let dl1 = cardToDice(l1);
+            let dl2 = cardToDice(l2);
+            let dl3 = cardToDice(l3);
+
+            let leftSum = dl1 + dl2 + dl3;
+
+            // Hiển thị chi tiết phép cộng bên Trái
+            let leftTxt = dl1 + " + " + dl2;
+            if (l3 !== "NONE") leftTxt += " + " + dl3;
+            document.getElementById("left-details").innerText = "Phép tính: " + leftTxt;
+            document.getElementById("left-total").innerText = leftSum;
+
+            // Lấy giá trị của từng ô bên Phải (Banker)
+            let r1 = document.getElementById("right1").value;
