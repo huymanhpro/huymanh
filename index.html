@@ -19,6 +19,8 @@
             margin-bottom: 20px;
             text-align: center;
             font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .container {
             display: flex;
@@ -33,11 +35,11 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
         .side-left {
-            background-color: #1b4d3e; /* Màu xanh */
+            background-color: #1b4d3e;
             border: 2px solid #2ecc71;
         }
         .side-right {
-            background-color: #4a1515; /* Màu đỏ */
+            background-color: #4a1515;
             border: 2px solid #e74c3c;
         }
         .side-title {
@@ -57,23 +59,24 @@
         }
         select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border-radius: 5px;
             border: 1px solid #ccc;
             background-color: #fff;
             color: #000;
             font-weight: bold;
             font-size: 1rem;
+            cursor: pointer;
         }
         .result-box {
             margin-top: 20px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.4);
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
             text-align: center;
         }
         .total-score {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
             color: #f1c40f;
             margin-top: 5px;
@@ -88,7 +91,7 @@
 </head>
 <body>
 
-    <h2>ỨNG DỤNG QUY ĐỔI BÀI SANG XÚC XẮC</h2>
+    <h2>Ứng dụng quy đổi bài sang xúc sắc</h2>
 
     <div class="container">
         <!-- BÊN TRÁI (XANH) -->
@@ -235,20 +238,25 @@
     </div>
 
     <script>
-        // Hàm quy đổi giá trị lá bài sang điểm xúc xắc theo ảnh
+        // Hàm xử lý quy đổi điểm chính xác tuyệt đối
         function getDicePoint(card) {
-            if (!card) return 0;
-            if (['A', '10', 'J', 'Q', 'K'].includes(card)) return 1;
-            if (['2', '3'].includes(card)) return 2;
-            if (['4', '5'].includes(card)) return 3;
-            if (['6', '7'].includes(card)) return 4;
-            if (card === '8') return 5;
-            if (card === '9') return 6;
+            if (!card || card === "") return 0;
+            
+            // Cắt chuỗi để lấy ký tự gốc nếu cần thiết
+            let cleanCard = card.trim().toUpperCase();
+            
+            if (['A', '10', 'J', 'Q', 'K'].includes(cleanCard)) return 1;
+            if (['2', '3'].includes(cleanCard)) return 2;
+            if (['4', '5'].includes(cleanCard)) return 3;
+            if (['6', '7'].includes(cleanCard)) return 4;
+            if (cleanCard === '8') return 5;
+            if (cleanCard === '9') return 6;
+            
             return 0;
         }
 
         function calculate() {
-            // Tính toán Bên Xanh (Trái)
+            // --- XỬ LÝ BÊN TRÁI (XANH) ---
             let leftInputs = document.querySelectorAll('.left-input');
             let totalLeft = 0;
             leftInputs.forEach(input => {
@@ -256,13 +264,7 @@
             });
             document.getElementById('total-left').innerText = totalLeft;
 
-            // Kiểm tra ô thứ 3 Bên Xanh
+            // Xử lý nhãn trạng thái ô thứ 3 bên trái
             let left3 = document.getElementById('left-3').value;
-            document.getElementById('status-left-3').innerText = left3 ? `Ô 3: Có bài (${getDicePoint(left3)}đ)` : "Ô 3: Không";
-
-            // Tính toán Bên Đỏ (Phải)
-            let rightInputs = document.querySelectorAll('.right-input');
-            let totalRight = 0;
-            rightInputs.forEach(input => {
-                totalRight += getDicePoint(input.value);
-            });
+            if (left3 === "") {
+                document.getElementById('status-left-3').innerText = "Ô 3: Không";
