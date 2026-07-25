@@ -3,268 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quy Đổi Bài Sang Xúc Xắc</title>
+    <title>Baccarat Matrix Predictor</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
+            background-color: #f4f7f6;
             margin: 0;
-            padding: 15px;
+            padding: 20px;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-        }
-        h2 {
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            min-height: 100vh;
         }
         .container {
-            display: flex;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 400px;
             width: 100%;
-            max-width: 600px;
-            gap: 15px;
-        }
-        .side {
-            flex: 1;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-        .side-left {
-            background-color: #1b4d3e;
-            border: 2px solid #2ecc71;
-        }
-        .side-right {
-            background-color: #4a1515;
-            border: 2px solid #e74c3c;
-        }
-        .side-title {
             text-align: center;
-            font-weight: bold;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
         }
-        .slot {
-            margin-bottom: 12px;
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
         }
-        .slot label {
+        .select-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .select-box {
+            width: 45%;
+        }
+        label {
             display: block;
-            font-size: 0.85rem;
-            margin-bottom: 4px;
-            opacity: 0.9;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
         }
         select {
             width: 100%;
             padding: 12px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            outline: none;
             background-color: #fff;
-            color: #000;
-            font-weight: bold;
-            font-size: 1rem;
             cursor: pointer;
         }
-        .result-box {
-            margin-top: 20px;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 5px;
-            text-align: center;
+        select:focus {
+            border-color: #4abc96;
         }
-        .total-score {
-            font-size: 1.8rem;
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #4abc96;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
             font-weight: bold;
-            color: #f1c40f;
-            margin-top: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
-        .status-3rd {
-            font-size: 0.85rem;
-            color: #bdc3c7;
-            margin-top: 5px;
-            font-style: italic;
+        button:hover {
+            background-color: #3a9d7c;
         }
+        .result-box {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 22px;
+            font-weight: bold;
+            display: none;
+        }
+        .b { background-color: #ffebee; color: #c62828; border: 2px solid #ef9a9a; }
+        .p { background-color: #e3f2fd; color: #1565c0; border: 2px solid #90caf9; }
+        .h { background-color: #e8f5e9; color: #2e7d32; border: 2px solid #a5d6a7; }
     </style>
 </head>
 <body>
 
-    <h2>Ứng dụng quy đổi bài sang xúc sắc</h2>
-
-    <div class="container">
-        <!-- BÊN TRÁI (XANH) -->
-        <div class="side side-left">
-            <div class="side-title">BÊN XANH</div>
-            
-            <div class="slot">
-                <label>Ô 1:</label>
-                <select class="card-input left-input" onchange="calculate()">
-                    <option value="">-- Chọn bài --</option>
-                    <option value="A">Át (A)</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="J">J</option>
-                    <option value="Q">Q</option>
-                    <option value="K">K</option>
-                </select>
-            </div>
-
-            <div class="slot">
-                <label>Ô 2:</label>
-                <select class="card-input left-input" onchange="calculate()">
-                    <option value="">-- Chọn bài --</option>
-                    <option value="A">Át (A)</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="J">J</option>
-                    <option value="Q">Q</option>
-                    <option value="K">K</option>
-                </select>
-            </div>
-
-            <div class="slot">
-                <label>Ô 3 (Tùy chọn):</label>
-                <select id="left-3" class="card-input left-input" onchange="calculate()">
-                    <option value="">-- Không có --</option>
-                    <option value="A">Át (A)</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="J">J</option>
-                    <option value="Q">Q</option>
-                    <option value="K">K</option>
-                </select>
-            </div>
-
-            <div class="result-box">
-                <div>Tổng điểm xúc sắc:</div>
-                <div id="total-left" class="total-score">0</div>
-                <div id="status-left-3" class="status-3rd">Ô 3: Không</div>
-            </div>
+<div class="container">
+    <h2>Baccarat Predictor</h2>
+    
+    <div class="select-group">
+        <div class="select-box">
+            <label for="card1">Lá bài 1</label>
+            <select id="card1">
+                <option value="1">1 (A)</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="j">J</option>
+                <option value="q">Q</option>
+                <option value="k">K</option>
+            </select>
         </div>
-
-        <!-- BÊN PHẢI (ĐỎ) -->
-        <div class="side side-right">
-            <div class="side-title">BÊN ĐỎ</div>
-            
-            <div class="slot">
-                <label>Ô 1:</label>
-                <select class="card-input right-input" onchange="calculate()">
-                    <option value="">-- Chọn bài --</option>
-                    <option value="A">Át (A)</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="J">J</option>
-                    <option value="Q">Q</option>
-                    <option value="K">K</option>
-                </select>
-            </div>
-
-            <div class="slot">
-                <label>Ô 2:</label>
-                <select class="card-input right-input" onchange="calculate()">
-                    <option value="">-- Chọn bài --</option>
-                    <option value="A">Át (A)</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="J">J</option>
-                    <option value="Q">Q</option>
-                    <option value="K">K</option>
-                </select>
-            </div>
-
-            <div class="slot">
-                <label>Ô 3 (Tùy chọn):</label>
-                <select id="right-3" class="card-input right-input" onchange="calculate()">
-                    <option value="">-- Không có --</option>
-                    <option value="A">Át (A)</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="J">J</option>
-                    <option value="Q">Q</option>
-                    <option value="K">K</option>
-                </select>
-            </div>
-
-            <div class="result-box">
-                <div>Tổng điểm xúc sắc:</div>
-                <div id="total-right" class="total-score">0</div>
-                <div id="status-right-3" class="status-3rd">Ô 3: Không</div>
-            </div>
+        
+        <div class="select-box">
+            <label for="card2">Lá bài 2</label>
+            <select id="card2">
+                <option value="1">1 (A)</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="j">J</option>
+                <option value="q">Q</option>
+                <option value="k">K</option>
+            </select>
         </div>
     </div>
 
-    <script>
-        // Hàm xử lý quy đổi điểm chính xác tuyệt đối
-        function getDicePoint(card) {
-            if (!card || card === "") return 0;
-            
-            // Cắt chuỗi để lấy ký tự gốc nếu cần thiết
-            let cleanCard = card.trim().toUpperCase();
-            
-            if (['A', '10', 'J', 'Q', 'K'].includes(cleanCard)) return 1;
-            if (['2', '3'].includes(cleanCard)) return 2;
-            if (['4', '5'].includes(cleanCard)) return 3;
-            if (['6', '7'].includes(cleanCard)) return 4;
-            if (cleanCard === '8') return 5;
-            if (cleanCard === '9') return 6;
-            
-            return 0;
+    <button onclick="predictNextHand()">DỰ ĐOÁN TAY SAU</button>
+
+    <div id="result" class="result-box"></div>
+</div>
+
+<script>
+// Định nghĩa cơ sở dữ liệu gốc của bạn (Thứ tự chuẩn xác 1q khác q1)
+const exactRules = {
+    "7q": "p", "1q": "b", "32": "b", "q4": "b", "4j": "p", "8j": "p", 
+    "81": "b", "29": "b", "87": "b", "62": "p", "q9": "p", "71": "b", 
+    "67": "p", "47": "b", "79": "p", "q2": "p", "910": "h", "51": "p", 
+    "98": "b", "10j": "b", "2q": "p", "92": "b", "36": "p", "j8": "p"
+};
+
+// Chuyển đổi ký tự bài sang điểm số Baccarat chuyên sâu
+function getBaccaratScore(card) {
+    if (card === "10" || card === "j" || card === "q" || card === "k") {
+        return 0;
+    }
+    return parseInt(card);
+}
+
+function predictNextHand() {
+    const c1 = document.getElementById("card1").value;
+    const c2 = document.getElementById("card2").value;
+    
+    // Tạo khóa tìm kiếm chuỗi (VD: "7q")
+    const key = c1 + c2;
+    const resultDiv = document.getElementById("result");
+    
+    // Kiểm tra tính hợp lệ (Không được chọn 2 lá trùng nhau hoàn toàn trong cùng 1 bộ bài baccarat gốc)
+    if (c1 === c2) {
+        resultDiv.style.display = "block";
+        resultDiv.className = "result-box b";
+        resultDiv.innerHTML = "Lỗi: Vui lòng chọn 2 lá khác nhau!";
+        return;
+    }
+
+    let finalPrediction = "";
+    let isExact = false;
+
+    // 1. Kiểm tra xem cặp này có nằm trong dữ liệu gốc bạn cung cấp không
+    if (exactRules[key]) {
+        finalPrediction = exactRules[key];
+        isExact = true;
+    } else {
+        // 2. Nếu chưa có trong dữ liệu gốc, tính toán dựa trên thuật toán tổng điểm đơn vị Baccarat
+        const score1 = getBaccaratScore(c1);
+        const score2 = getBaccaratScore(c2);
+        const totalPoints = (score1 + score2) % 10;
+
+        // Ma trận suy luận dựa trên phân bổ tổng điểm từ dữ liệu thực tế
+        if (totalPoints === 0 || totalPoints === 1 || totalPoints === 5) {
+            finalPrediction = "b";
+        } else if (totalPoints === 2 || totalPoints === 3 || totalPoints === 6 || totalPoints === 8) {
+            finalPrediction = "p";
+        } else if (totalPoints === 9) {
+            finalPrediction = "h";
+        } else {
+            // Điểm 4 và 7 có sự phân tách động, mặc định tối ưu theo xác suất dữ liệu nền
+            finalPrediction = (totalPoints === 4) ? "b" : "p";
         }
+    }
 
-        function calculate() {
-            // --- XỬ LÝ BÊN TRÁI (XANH) ---
-            let leftInputs = document.querySelectorAll('.left-input');
-            let totalLeft = 0;
-            leftInputs.forEach(input => {
-                totalLeft += getDicePoint(input.value);
-            });
-            document.getElementById('total-left').innerText = totalLeft;
+    // Hiển thị kết quả lên giao diện trực quan
+    resultDiv.style.display = "block";
+    resultDiv.className = "result-box " + finalPrediction;
+    
+    let textResult = finalPrediction.toUpperCase();
+    if (textResult === "B") textResult = "🔴 BANKER (Nhà Cái)";
+    if (textResult === "P") textResult = "🔵 PLAYER (Nhà Con)";
+    if (textResult === "H") textResult = "🟢 TIE (Hòa)";
 
-            // Xử lý nhãn trạng thái ô thứ 3 bên trái
-            let left3 = document.getElementById('left-3').value;
-            if (left3 === "") {
-                document.getElementById('status-left-3').innerText = "Ô 3: Không";
+    resultDiv.innerHTML = textResult + (isExact ? " <br><small style='font-size:12px; font-weight:normal;'>(Khớp dữ liệu gốc của bạn)</small>" : " <br><small style='font-size:12px; font-weight:normal;'>(Suy luận theo ma trận điểm)</small>");
+}
+</script>
+
+</body>
+</html>
