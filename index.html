@@ -54,7 +54,7 @@
             border: 2px solid #ccd0d5;
             border-radius: 8px;
             padding: 12px;
-            width: 120px;
+            width: 145px;
             text-align: center;
             box-sizing: border-box;
             background-color: #fff;
@@ -81,21 +81,23 @@
         .color-selector {
             display: flex;
             gap: 8px;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             justify-content: center;
         }
-        .color-dot {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
+        .color-btn {
+            padding: 6px 10px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
             cursor: pointer;
-            border: 2px solid #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: transform 0.1s;
+            font-size: 13px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
-        .color-dot:active { transform: scale(0.9); }
-        .dot-blue { background-color: #007bff; }
-        .dot-red { background-color: #dc3545; }
+        .btn-blue { background-color: #007bff; }
+        .btn-blue:hover { background-color: #0056b3; }
+        .btn-red { background-color: #dc3545; }
+        .btn-red:hover { background-color: #bd2130; }
         
         .color-preview {
             display: flex;
@@ -128,7 +130,7 @@
         .history-list {
             border: 1px solid #ccd0d5;
             border-radius: 6px;
-            height: 220px;
+            height: 250px;
             overflow-y: auto;
             padding: 10px;
             background: #f9fafb;
@@ -139,10 +141,25 @@
             margin-bottom: 12px;
         }
         .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 6px 4px;
             border-bottom: 1px dashed #e4e6eb;
             color: #333;
         }
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            font-size: 11px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-delete:hover { background-color: #bd2130; }
+        
         .btn-copy {
             background-color: #17a2b8;
             color: white;
@@ -159,33 +176,29 @@
 <body>
 
 <div class="container">
-    <!-- BÊN TRÁI: KHU VỰC ĐIỀU KHIỂN -->
+    <!-- BÊN TRÁI: ĐIỀU KHIỂN -->
     <div class="left-panel">
         <h3>Nhập Dữ Liệu</h3>
         <div class="grid-inputs">
-            <!-- Ô 1 -->
             <div class="box box-blue">
                 <label>Ô 1 (Xanh)</label>
                 <select id="box1">
-                    <!-- Tạo nhanh số từ 0-9 -->
-                    <script>for(let i=0;i<=9;i++) document.write(`<option value="${i}">${i}</option>`);</script>
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option>
                 </select>
             </div>
             
-            <!-- Ô 2 -->
             <div class="box box-red">
                 <label>Ô 2 (Đỏ)</label>
                 <select id="box2">
-                    <script>for(let i=0;i<=9;i++) document.write(`<option value="${i}">${i}</option>`);</script>
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option>
                 </select>
             </div>
             
-            <!-- Ô 3 -->
             <div class="box box-blue">
-                <label>Ô 3 (Chọn 3 màu)</label>
+                <label>Ô 3 (Chọn màu)</label>
                 <div class="color-selector">
-                    <div class="color-dot dot-blue" onclick="chooseColor(1)"></div>
-                    <div class="color-dot dot-red" onclick="chooseColor(2)"></div>
+                    <button class="color-btn btn-blue" onclick="chooseColor(1)">Xanh</button>
+                    <button class="color-btn btn-red" onclick="chooseColor(2)">Đỏ</button>
                 </div>
                 <div class="color-preview" id="preview3">
                     <div class="preview-circle"></div>
@@ -194,10 +207,9 @@
                 </div>
             </div>
             
-            <!-- Ô 4 -->
             <div class="box box-red">
                 <label>Ô 4 (Tự động)</label>
-                <div style="height: 28px;"></div> <!-- Giữ khoảng cách đều -->
+                <div style="height: 32px;"></div> <!-- Giữ khoảng cách -->
                 <div class="color-preview" id="preview4">
                     <div class="preview-circle"></div>
                     <div class="preview-circle"></div>
@@ -205,7 +217,6 @@
                 </div>
             </div>
             
-            <!-- Ô 5 -->
             <div class="box box-gray">
                 <label>Ô 5 (Lựa chọn)</label>
                 <select id="box5">
@@ -219,11 +230,11 @@
         <button class="btn-ok" onclick="handleCalculate()">OK</button>
     </div>
     
-    <!-- BÊN PHẢI: KẾT QUẢ TÍCH LŨY -->
+    <!-- BÊN PHẢI: KẾT QUẢ VÀ NÚT XÓA -->
     <div class="right-panel">
         <h3>Danh Sách Kết Quả</h3>
         <div class="history-list" id="historyList"></div>
-        <button class="btn-copy" onclick="copyHistory()">Sao chép danh sách</button>
+        <button class="btn-copy" onclick="copyHistory()">Sau chép danh sách</button>
     </div>
 </div>
 
@@ -231,7 +242,7 @@
     let box3Colors = [];
     let box4Colors = [];
 
-    // Hàm chọn màu cho Ô 3 và tự động đảo màu ở Ô 4
+    // Chọn màu cho Ô 3 và đảo màu tự động ở Ô 4
     function chooseColor(colorNum) {
         if (box3Colors.length >= 3) {
             box3Colors = []; 
@@ -239,13 +250,12 @@
         }
         
         box3Colors.push(colorNum);
-        // Đảo màu: nếu chọn Xanh (1) thì Ô 4 tự ra Đỏ (2) và ngược lại
         box4Colors.push(colorNum === 1 ? 2 : 1);
         
         updatePreviews();
     }
 
-    // Hiển thị các chấm màu trực quan dưới ô
+    // Cập nhật hiển thị chấm màu tròn dưới ô
     function updatePreviews() {
         const p3 = document.getElementById('preview3').children;
         const p4 = document.getElementById('preview4').children;
@@ -264,7 +274,7 @@
         });
     }
 
-    // Tính toán khi nhấn nút OK
+    // Thực hiện tính toán
     function handleCalculate() {
         if (box3Colors.length < 3) {
             alert("Vui lòng click chọn đủ 3 màu cho Ô 3!");
@@ -274,39 +284,17 @@
         let num1 = parseInt(document.getElementById('box1').value);
         let num2 = parseInt(document.getElementById('box2').value);
         
-        // Quy đổi giá trị tính toán: Xanh = 1, Đỏ = 2
+        // Quy đổi giá trị: Xanh = 1, Đỏ = 2 để tính tổng
         let sumBlue = num1 + box3Colors.reduce((acc, curr) => acc + curr, 0);
         let sumRed = num2 + box4Colors.reduce((acc, curr) => acc + curr, 0);
         
-        // Lấy số hàng đơn vị nếu tổng lớn hơn 9
+        // Lấy số hàng đơn vị nếu > 9
         let a = sumBlue % 10;
         let b = sumRed % 10;
         
         let choice5 = document.getElementById('box5').value;
-        let resultText = `${a}-${b}=${choice5}`;
+        let resultText = a + "-" + b + "=" + choice5;
         
-        // Đưa vào danh sách bên phải
+        // Render phần tử vào danh sách có kèm nút xóa riêng biệt
         const historyList = document.getElementById('historyList');
         const newItem = document.createElement('div');
-        newItem.className = 'history-item';
-        newItem.innerText = resultText;
-        historyList.appendChild(newItem);
-        
-        // Tự động cuộn xuống dòng mới nhất
-        historyList.scrollTop = historyList.scrollHeight;
-        
-        // Reset trạng thái chọn màu để chuẩn bị lượt tiếp theo
-        box3Colors = [];
-        box4Colors = [];
-        updatePreviews();
-    }
-
-    // Copy danh sách kết quả
-    function copyHistory() {
-        const items = document.querySelectorAll('.history-item');
-        let textToCopy = "";
-        items.forEach(item => {
-            textToCopy += item.innerText + "\n";
-        });
-        
-        if(!textToCopy) {
