@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tìm Kiếm Và Lọc Dãy Số</title>
+    <title>Bộ Lọc Dãy Số Thông Minh</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -24,6 +24,7 @@
             text-align: center;
             color: #2c3e50;
             margin-top: 0;
+            margin-bottom: 20px;
         }
         label {
             font-weight: bold;
@@ -45,9 +46,10 @@
             outline: none;
         }
         textarea {
-            height: 120px;
+            height: 140px;
             resize: vertical;
             font-family: monospace;
+            background-color: #fafafa;
         }
         .search-box {
             display: flex;
@@ -74,6 +76,7 @@
             padding: 15px;
             border-radius: 8px;
             margin-top: 15px;
+            border: 1px solid #e2e8f0;
         }
         .quick-result {
             margin-top: 10px;
@@ -81,9 +84,9 @@
             font-weight: bold;
             color: #2c3e50;
             background: #fff;
-            padding: 10px;
+            padding: 12px;
             border-radius: 6px;
-            border: 1px dashed #3498db;
+            border: 2px dashed #3498db;
             text-align: center;
         }
         .result-container {
@@ -125,12 +128,21 @@
 <div class="container">
     <h2>Bộ Lọc Số Thông Minh</h2>
     
-    <label for="dataInput">Dán danh sách dãy số của bạn vào đây:</label>
-    <textarea id="dataInput" placeholder="Ví dụ:&#10;0=123456&#10;1=246810&#10;2=135789"></textarea>
+    <label for="dataInput">Danh sách dãy số gốc (Đã xếp từ nhỏ đến lớn):</label>
+    <textarea id="dataInput">0=012579
+1=123458
+2=125689
+3=135689
+4=145789
+5=023578
+6=013679
+7=124789
+8=134589
+9=012459</textarea>
     
-    <!-- TÍNH NĂNG MỚI: Ô chọn số từ 0 đến 9 -->
+    <!-- TÍNH NĂNG 1: Chọn từ 0 đến 9 ở bên phải -->
     <div class="filter-section">
-        <label for="digitSelect">Xem nhanh dãy số bên phải dấu (=):</label>
+        <label for="digitSelect">Xem nhanh vế phải dấu bằng (=):</label>
         <select id="digitSelect" onchange="getRightSideValue()">
             <option value="">-- Chọn một số từ 0 đến 9 --</option>
             <option value="0">Số 0</option>
@@ -147,23 +159,24 @@
         <div id="quickResult" class="quick-result" style="display: none;"></div>
     </div>
 
-    <label for="searchInput">Tìm kiếm trùng khớp vế phải (Tối đa 3 số):</label>
+    <!-- TÍNH NĂNG 2: Tìm kiếm tối đa 3 số trùng khớp -->
+    <label for="searchInput">Tìm kiếm trùng khớp (Tối đa 3 số):</label>
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Ví dụ: 2 4 6 hoặc 246" maxlength="10">
         <button onclick="searchNumbers()">Tìm kiếm</button>
     </div>
-    <div class="hint">Kết quả tìm kiếm sẽ tự sắp xếp theo thứ tự trùng nhiều nhất lên đầu.</div>
+    <div class="hint">Nhập các số viết liền hoặc cách nhau. Hệ thống tự xếp trùng nhiều nhất lên đầu.</div>
 
     <div class="result-container">
-        <label>Kết quả tìm kiếm trùng khớp:</label>
+        <label>Kết quả lọc trùng khớp:</label>
         <div id="resultList">
-            <div style="color: #7f8c8d; text-align: center; margin-top: 20px;">Vui lòng nhập dữ liệu và thực hiện thao tác.</div>
+            <div style="color: #7f8c8d; text-align: center; margin-top: 20px;">Nhập số vào ô tìm kiếm và bấm nút để xem kết quả.</div>
         </div>
     </div>
 </div>
 
 <script>
-// Hàm xử lý tính năng mới: Chọn từ 0-9 để lấy dãy số bên phải
+// Hàm lấy dãy số bên phải khi chọn từ 0-9
 function getRightSideValue() {
     const dataInput = document.getElementById('dataInput').value.trim();
     const selectedDigit = document.getElementById('digitSelect').value;
@@ -176,7 +189,7 @@ function getRightSideValue() {
 
     if (!dataInput) {
         quickResult.style.display = 'block';
-        quickResult.innerHTML = '<span style="color: #e74c3c;">Vui lòng dán danh sách số vào ô dữ liệu trước!</span>';
+        quickResult.innerHTML = '<span style="color: #e74c3c;">Vui lòng dán danh sách số vào ô dữ liệu!</span>';
         return;
     }
 
@@ -198,13 +211,13 @@ function getRightSideValue() {
 
     quickResult.style.display = 'block';
     if (foundValue) {
-        quickResult.innerHTML = `Kết quả của ${selectedDigit} là: <span style="color: #2ecc71; font-size: 22px;">${foundValue}</span>`;
+        quickResult.innerHTML = `Kết quả của số ${selectedDigit} là: <span style="color: #2ecc71; font-size: 22px; letter-spacing: 2px;">${foundValue}</span>`;
     } else {
         quickResult.innerHTML = `<span style="color: #e74c3c;">Không tìm thấy dòng bắt đầu bằng "${selectedDigit}="</span>`;
     }
 }
 
-// Hàm tìm kiếm trùng khớp cũ
+// Hàm tìm kiếm và sắp xếp theo số lượng số trùng khớp
 function searchNumbers() {
     const dataInput = document.getElementById('dataInput').value.trim();
     const searchInput = document.getElementById('searchInput').value.trim();
@@ -215,6 +228,7 @@ function searchNumbers() {
         return;
     }
 
+    // Lấy tối đa 3 chữ số cần tìm kiếm
     let searchDigits = searchInput.replace(/\s+/g, '').split('');
     if (searchDigits.length > 3) {
         searchDigits = searchDigits.slice(0, 3);
@@ -234,7 +248,7 @@ function searchNumbers() {
             searchDigits.forEach(digit => {
                 if (tempRightSide.includes(digit)) {
                     matchCount++;
-                    tempRightSide = tempRightSide.replace(digit, '');
+                    tempRightSide = tempRightSide.replace(digit, ''); // loại bỏ ký tự đã đếm
                 }
             });
 
@@ -245,10 +259,11 @@ function searchNumbers() {
         }
     });
 
+    // Sắp xếp: Trùng nhiều số nhất nhảy lên đầu
     results.sort((a, b) => b.matchCount - a.matchCount);
 
     if (results.length === 0) {
-        resultList.innerHTML = '<div style="color: #e74c3c; text-align: center; margin-top: 20px;">Không tìm thấy dãy số đúng định dạng</div>';
+        resultList.innerHTML = '<div style="color: #e74c3c; text-align: center; margin-top: 20px;">Dữ liệu không đúng định dạng.</div>';
         return;
     }
 
@@ -257,7 +272,7 @@ function searchNumbers() {
         const isZero = item.matchCount === 0;
         htmlOutput += `
             <div class="result-item ${isZero ? 'no-match' : ''}">
-                <span>${item.originalLine}</span>
+                <span style="font-size: 17px; font-weight: 500; letter-spacing: 1px;">${item.originalLine}</span>
                 <span class="badge ${isZero ? 'zero' : ''}">Trùng: ${item.matchCount} số</span>
             </div>
         `;
